@@ -1,7 +1,234 @@
 {
   "version": 1,
   "project": "navi",
-  "lastSync": null,
-  "pbis": {},
-  "generatedPages": {}
+  "lastSync": "2026-02-09T23:30:00Z",
+  "pbis": {
+    "1": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "2e5297e40cda4f31685f76e7a6b613f33ac5d7c709861f38fcfc3474febe5b26",
+      "tasksHash": "47a366424759c1a7ddcb08eee2daad26ec4f9136a425e27c24e82721915b8b10",
+      "docsPages": ["features/session-monitoring.md"]
+    },
+    "2": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "c8870dc7eb483be953e3976c67f6f83c9f70cb862c357c4641a33313e6c4b187",
+      "tasksHash": "ee471e02ce8d5346361506bb5bcdf1bbba146e888d0c10ae52a90d62a2955de8",
+      "docsPages": ["features/session-monitoring.md", "architecture/hooks.md"]
+    },
+    "3": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "6a2ffeea2a6d3429d8572c44ed2fcabdad85d4d0be1222c8b3d2c18f486dd683",
+      "tasksHash": "8a2b887b83db64a763030f7c4dc00a5c4d588dc4c446bc8868eb9018099f31b0",
+      "docsPages": ["features/session-monitoring.md", "architecture/data-flow.md"]
+    },
+    "4": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "c02d024137247e3f5e7e5749e9216fd26b36d6558441e0885f078ad707c3b74c",
+      "tasksHash": "1c47fbe8cd63ec5049a0ec29c9313a8cad449d5defff82156a3f15e753521685",
+      "docsPages": ["features/session-monitoring.md"]
+    },
+    "5": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "5f31f80ebd7e0046f7c6a4e370e0c157150268294d31f2876d0d7cd0765eb453",
+      "tasksHash": "daa56b39c02923643e17f91d92d9a8653cdff3c393f1b1eb7143d4cd7a47e661",
+      "docsPages": ["features/session-management.md"]
+    },
+    "6": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "152f60a0837f941d28bbdf002f290da7c4ab0fe80532b4080da3a452192295d9",
+      "tasksHash": "26e1d0475dfeb04bb5c083ceabd3a1193005526960b709bef87bb857ceb2733c",
+      "docsPages": ["getting-started/index.md"]
+    },
+    "7": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "ead34a805da03ae272a3d5c6a1217ad74b24d465a57c01783e3311b8119b39b2",
+      "tasksHash": "16f63301742649d43bc39500dbbd6069399f685dad6787abccb31f2a0d80bb9b",
+      "docsPages": ["features/session-management.md"]
+    },
+    "11": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "2d4a7d64b2b3f8b6b27b1ff6b29abdbae5d6d2252752362f43d98c4c83eb479a",
+      "tasksHash": "40c04827bef7913b4edc1d2051f0e1822d7492fa5a98a0de2ca3e1e06cc66f86",
+      "docsPages": ["features/preview-pane.md"]
+    },
+    "12": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "6b60412f49836854bafdf697d338609d794680b84b1e92e13ebef91ec0d80236",
+      "tasksHash": "ce0a999e4ecf22d02f902030e27274b3f4ff8cb319804d70cecbcbab378ff90a",
+      "docsPages": ["features/session-metrics.md"]
+    },
+    "13": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "1930d91166375f6cbcfa5994c1993d47e8d51b5b91ae2f6e892c1bdc7790d78c",
+      "tasksHash": "06cb09ab0c934c8059a4123207e646842c81ee950d7da4e679c406c4e535c70d",
+      "docsPages": ["features/search-and-filter.md"]
+    },
+    "16": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "f6cc00bda12a99bd7f52941e2bc7625ff9536487a0c194b8bcc6b17f7fac1f31",
+      "tasksHash": "d91e035576eefeb8bd9bf867affe096de6a3bef55669bb7c5819b8bd2a99536b",
+      "docsPages": ["features/git-integration.md"]
+    },
+    "19": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "02f4e31e14a4e678763828320089e084d39001531e950052b0667c808948537e",
+      "tasksHash": "d8edefed5986805ba3be8a1a06aa78aa77c09af2020384ae01f09726c47dc2cb",
+      "docsPages": ["features/remote-sessions.md"]
+    },
+    "26": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "c9977b83a4e5ba4538f9ee410c651f3b55a50c14c0ccdc22fe0648528fa76442",
+      "tasksHash": "7836c9ad016ee2b3c07013b741c2e5a41b0da573d2bb9613ab12fbc4209b53d0",
+      "docsPages": ["features/session-metrics.md"]
+    },
+    "27": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "769211f724252f3760f2e77c3652bad15aacdbd1e90ecadbc6d92b9f4ec23329",
+      "tasksHash": "50494d3817e4220dbdc4b10e15bc84563b66e47865bdf3b89c02fe439545dbe6",
+      "docsPages": ["features/remote-sessions.md"]
+    },
+    "28": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "966f3f437e0e6e48ba6d469a122faf3287d3694270fec0d37cd698cb26b7e6af",
+      "tasksHash": "2f3dbdd4852624dfd957e0af22a1f12f047d1755e0f93ee7349371c59d8ee855",
+      "docsPages": ["features/task-view.md", "architecture/provider-system.md"]
+    },
+    "29": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "b31149658045c53a25f40c8ae4a755e09d807fdb3dcd75a052846df6f396408c",
+      "tasksHash": "f3424aefacd13323460b02e6431eb34ba0966038b1930bef267808cd45686667",
+      "docsPages": ["features/content-viewer.md"]
+    },
+    "31": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "090919deea5b02d5b84678d10c5ca32710503975abe49c6737c60dc10ffe1284",
+      "tasksHash": "dca68bd6d229edfc429530220db56cb83db28843939b51a09bdcc4b52ae7474f",
+      "docsPages": ["features/search-and-filter.md"]
+    },
+    "32": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "af80457fac755c0e57d5344789084508e82cf6286fcbdaa9755f08c9e8985d30",
+      "tasksHash": "f4c80a08a6ff5351176c99b87e57d25b3b8806b57a138a6f0e021550cea62aea",
+      "docsPages": ["features/scrollable-panels.md"]
+    },
+    "33": {
+      "documented": true,
+      "lastDocumented": "2026-02-09T23:30:00Z",
+      "prdHash": "aa057bfc9d892f20b30e807f7a3614cefc1014e44523c85581371638d335deac",
+      "tasksHash": "11fc3e6d4bbd417146e2fe0039eaa2eac35625f3124130528dfafa12e4b2404b",
+      "docsPages": ["features/agent-teams.md"]
+    }
+  },
+  "generatedPages": {
+    "getting-started/index.md": {
+      "sourcePBIs": [6],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "getting-started/configuration.md": {
+      "sourcePBIs": [6, 28],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "features/session-monitoring.md": {
+      "sourcePBIs": [1, 2, 3, 4],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "features/session-management.md": {
+      "sourcePBIs": [5, 7],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "features/preview-pane.md": {
+      "sourcePBIs": [11],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "features/session-metrics.md": {
+      "sourcePBIs": [12, 26],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "features/search-and-filter.md": {
+      "sourcePBIs": [13, 31],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "features/git-integration.md": {
+      "sourcePBIs": [16],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "features/remote-sessions.md": {
+      "sourcePBIs": [19, 27],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "features/task-view.md": {
+      "sourcePBIs": [28],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "features/content-viewer.md": {
+      "sourcePBIs": [29],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "features/scrollable-panels.md": {
+      "sourcePBIs": [32],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "features/agent-teams.md": {
+      "sourcePBIs": [33],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "architecture/index.md": {
+      "sourcePBIs": [1, 2, 3, 4],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "architecture/project-structure.md": {
+      "sourcePBIs": [1],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "architecture/data-flow.md": {
+      "sourcePBIs": [2, 3, 12, 26, 28],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "architecture/hooks.md": {
+      "sourcePBIs": [2, 33],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "architecture/provider-system.md": {
+      "sourcePBIs": [28],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "reference/keybindings.md": {
+      "sourcePBIs": [4, 5, 7, 11, 13, 16, 28, 29, 31, 32],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "reference/configuration-files.md": {
+      "sourcePBIs": [2, 6, 28],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "reference/session-json.md": {
+      "sourcePBIs": [1, 2, 3, 12, 26, 33],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "reference/status-icons.md": {
+      "sourcePBIs": [4, 12, 26, 33],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    },
+    "changelog.md": {
+      "sourcePBIs": [1, 2, 3, 4, 5, 6, 7, 11, 12, 13, 16, 19, 26, 27, 28, 29, 31, 32, 33],
+      "lastGenerated": "2026-02-09T23:30:00Z"
+    }
+  }
 }
