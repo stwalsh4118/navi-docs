@@ -1,0 +1,35 @@
+---
+title: Navi
+description: A TUI dashboard for monitoring and managing Claude Code sessions.
+template: splash
+hero:
+  tagline: Monitor, manage, and interact with all your Claude Code sessions from a single terminal dashboard.
+  actions:
+    - text: Get Started
+      link: /getting-started/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/stwalsh4118/navi
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Key Features
+
+<CardGrid>
+  <Card title="Session Monitoring" icon="laptop">
+    Real-time status tracking of all Claude Code sessions with automatic polling and status icons.
+  </Card>
+  <Card title="tmux Integration" icon="rocket">
+    Attach to and detach from tmux sessions directly from the TUI. Create, kill, and rename sessions.
+  </Card>
+  <Card title="Remote Sessions" icon="open-book">
+    Aggregate and manage sessions across multiple machines via SSH with full feature parity.
+  </Card>
+  <Card title="Task View" icon="list-format">
+    Pluggable task provider system to view project tasks from any source directly in the dashboard.
+  </Card>
+</CardGrid>
