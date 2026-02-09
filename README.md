@@ -1,49 +1,47 @@
-# Starlight Starter Kit: Basics
+# navi-docs
 
-[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
+Documentation site for [Navi](https://github.com/stwalsh4118/navi) — a TUI dashboard for monitoring and managing Claude Code sessions.
 
-```
-pnpm create astro@latest -- --template starlight
-```
+Built with [Starlight](https://starlight.astro.build), deployed to [Cloudflare Pages](https://pages.cloudflare.com).
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Local Development
 
-## 🚀 Project Structure
-
-Inside of your Astro + Starlight project, you'll see the following folders and files:
-
-```
-.
-├── public/
-├── src/
-│   ├── assets/
-│   ├── content/
-│   │   └── docs/
-│   └── content.config.ts
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
+```bash
+pnpm install
+pnpm dev
 ```
 
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+Opens at `http://localhost:4321`.
 
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
+## Build & Deploy
 
-Static assets, like favicons, can be placed in the `public/` directory.
+```bash
+pnpm build
+```
 
-## 🧞 Commands
+Output goes to `./dist/`. Deploy to Cloudflare Pages automatically via GitHub integration, or manually:
 
-All commands are run from the root of the project, from a terminal:
+```bash
+npx wrangler pages deploy dist --project-name=navi-docs
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+## Updating Documentation
 
-## 👀 Want to learn more?
+From the navi project directory, use the Claude Code skills:
 
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+- `/sync-docs` — Full project docs sync (discovers all Done PBIs, generates/updates pages, commits incrementally)
+- `/document-feature <PBI-ID>` — Deep re-documentation of a single feature
+
+The `.docs-manifest.json` tracks what's been documented with content hashes for incremental updates.
+
+## Structure
+
+```
+src/content/docs/
+  index.mdx                     # Landing page
+  getting-started/              # Installation & configuration
+  features/                     # Feature documentation (one page per feature)
+  architecture/                 # System architecture, data flow, hooks, providers
+  reference/                    # Keybindings, config files, JSON formats, status icons
+  changelog.md                  # Feature completion history
+```
