@@ -1,7 +1,7 @@
 {
   "version": 1,
   "project": "navi",
-  "lastSync": "2026-02-09T23:30:00Z",
+  "lastSync": "2026-02-10T00:00:00Z",
   "pbis": {
     "1": {
       "documented": true,
@@ -82,7 +82,7 @@
     },
     "19": {
       "documented": true,
-      "lastDocumented": "2026-02-09T23:30:00Z",
+      "lastDocumented": "2026-02-10T00:00:00Z",
       "prdHash": "02f4e31e14a4e678763828320089e084d39001531e950052b0667c808948537e",
       "tasksHash": "d8edefed5986805ba3be8a1a06aa78aa77c09af2020384ae01f09726c47dc2cb",
       "docsPages": ["features/remote-sessions.md"]
@@ -96,7 +96,7 @@
     },
     "27": {
       "documented": true,
-      "lastDocumented": "2026-02-09T23:30:00Z",
+      "lastDocumented": "2026-02-10T00:00:00Z",
       "prdHash": "769211f724252f3760f2e77c3652bad15aacdbd1e90ecadbc6d92b9f4ec23329",
       "tasksHash": "50494d3817e4220dbdc4b10e15bc84563b66e47865bdf3b89c02fe439545dbe6",
       "docsPages": ["features/remote-sessions.md"]
@@ -172,7 +172,7 @@
     },
     "features/remote-sessions.md": {
       "sourcePBIs": [19, 27],
-      "lastGenerated": "2026-02-09T23:30:00Z"
+      "lastGenerated": "2026-02-10T00:00:00Z"
     },
     "features/task-view.md": {
       "sourcePBIs": [28],
@@ -215,8 +215,8 @@
       "lastGenerated": "2026-02-09T23:30:00Z"
     },
     "reference/configuration-files.md": {
-      "sourcePBIs": [2, 6, 28],
-      "lastGenerated": "2026-02-09T23:30:00Z"
+      "sourcePBIs": [2, 6, 19, 28],
+      "lastGenerated": "2026-02-10T00:00:00Z"
     },
     "reference/session-json.md": {
       "sourcePBIs": [1, 2, 3, 12, 26, 33],

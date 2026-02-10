@@ -14,8 +14,36 @@ sidebar:
 | `~/.claude-sessions/hooks/notify.sh` | Main status hook script |
 | `~/.claude-sessions/hooks/tool-tracker.sh` | Tool usage tracking hook |
 | `~/.claude/settings.json` | Claude Code settings (hook configuration) |
+| `~/.config/navi/remotes.yaml` | Remote machine configuration |
 | `.navi.yaml` | Per-project task configuration |
 | `~/.navi/config.yaml` | Global task configuration |
+
+## ~/.config/navi/remotes.yaml (Remote Machines)
+
+Configures remote machines for SSH-based session aggregation. If this file doesn't exist, remote support is disabled.
+
+```yaml
+remotes:
+  - name: dev-server
+    host: dev.example.com
+    user: sean
+    key: ~/.ssh/id_rsa
+    sessions_dir: ~/.claude-sessions
+    jump_host: bastion.example.com
+```
+
+### Fields
+
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `name` | string | Yes | — | Display name for the remote |
+| `host` | string | Yes | — | SSH hostname or IP |
+| `user` | string | Yes | — | SSH username |
+| `key` | string | Yes | — | Path to SSH private key (supports `~`) |
+| `sessions_dir` | string | No | `~/.claude-sessions` | Sessions directory on the remote |
+| `jump_host` | string | No | — | Jump/bastion host |
+
+See [Remote Sessions](/features/remote-sessions/) for full details.
 
 ## .navi.yaml (Per-Project)
 
