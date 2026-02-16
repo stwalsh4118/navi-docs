@@ -8,7 +8,7 @@ sidebar:
 
 ## Overview
 
-The task view displays project tasks from any source (GitHub Issues, markdown files, or custom providers) directly in the navi dashboard via a pluggable provider system.
+The task view displays project tasks from any source (GitHub Issues, markdown files, or custom providers) directly in the navi dashboard via a pluggable provider system. Tasks are grouped by project or category with sorting, filtering, progress indicators, and summary statistics to help manage large backlogs efficiently.
 
 ## Quick Start
 
@@ -37,9 +37,80 @@ The task panel appears alongside the session list. Tasks are grouped by project 
 | `Space` | Expand / collapse task group |
 | `/` | Search tasks |
 | `Enter` | Open task (URL or file viewer) |
-| `r` | Refresh tasks |
+| `r` | Refresh tasks (invalidate cache) |
 | `[` / `]` | Resize task panel |
+| `s` | Cycle sort mode |
+| `S` | Toggle sort direction |
+| `f` | Cycle filter mode |
+| `J` | Jump to next group header |
+| `K` | Jump to previous group header |
+| `e` | Toggle expand / collapse all groups |
+| `a` | Toggle accordion mode |
 | `Esc` | Return focus to session list |
+
+## Sorting
+
+Cycle through sort modes with `s`, reverse direction with `S`.
+
+| Mode | Order | Description |
+|------|-------|-------------|
+| **source** | Original provider order | Default — preserves the order your provider returns |
+| **status** | Active first, done last | Priority: active → review → blocked → todo → done |
+| **name** | Alphabetical (case-insensitive) | Groups sorted by title |
+| **progress** | Least complete first | Groups with lowest completion percentage appear first |
+
+All modes use source order as a stable tiebreaker. When sort mode is `status`, tasks within each group are also sorted by status priority.
+
+The header shows the current sort mode and direction (e.g., `sort:status↓`). The indicator is hidden when using the default (source ascending).
+
+## Filtering
+
+Cycle through filter modes with `f`.
+
+| Mode | Shows | Description |
+|------|-------|-------------|
+| **all** | Every group | Default — nothing hidden |
+| **active** | Active, review, or blocked groups | Hides done and todo groups |
+| **incomplete** | All except done groups | Shows everything that still has work remaining |
+
+The header shows the active filter and how many groups are hidden (e.g., `filter:active (22 hidden)`). Search operates within the filtered set — hidden groups are not searchable.
+
+## Progress Indicators
+
+Each group header displays a completion counter and mini progress bar:
+
+```
+▶ 3. Enhanced Session Creation  [3/5] ██░░  todo
+```
+
+- `[3/5]` — completed tasks / total tasks in the group
+- `██░░` — 4-character proportional progress bar
+- Empty groups show `(0)` instead of a progress bar
+
+Tasks with status "done", "closed", or "completed" count as complete.
+
+## Summary Statistics
+
+When the panel is tall enough, a second header line shows overall task health across all groups (unfiltered totals):
+
+```
+  12 done · 3 active · 1 review · 18 todo
+```
+
+Each category is color-coded: green (done), cyan (active), magenta (review), red (blocked), yellow (todo). Status strings are normalized to these five canonical categories.
+
+## Group Navigation
+
+| Key | Action |
+|-----|--------|
+| `J` | Jump cursor to next group header (wraps to first) |
+| `K` | Jump cursor to previous group header (wraps to last) |
+| `e` | Toggle expand/collapse all groups |
+| `a` | Toggle accordion mode (expanding one group collapses others) |
+
+## Manual Refresh
+
+Press `r` to immediately re-run the task provider, bypassing the cache. The header shows "Refreshing..." while the provider is running. Duplicate refresh requests while one is in progress are ignored.
 
 ## Task Providers
 
@@ -51,7 +122,7 @@ Scans markdown files for task definitions. Designed for projects using the deliv
 tasks:
   provider: "markdown-tasks"
   args:
-    path: "docs/delivery"    # Directory to scan
+    path: "docs/delivery"
 ```
 
 ### Built-in: github-issues
@@ -118,6 +189,10 @@ tasks:
 ```
 
 Task results are cached and refreshed at the configured interval (default 30 seconds).
+
+### Runtime State
+
+Sort mode, filter mode, sort direction, and accordion mode are session-persistent (stored in memory) but do not persist across restarts.
 
 ## Related Features
 
