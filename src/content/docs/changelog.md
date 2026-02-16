@@ -8,6 +8,15 @@ sidebar:
 
 ## Feature Completion History
 
+### 2026-02-15
+
+- **PBI-44**: Background Attach Monitor — Audio notifications continue while attached to tmux; `navi status` CLI command for tmux status bar integration
+- **PBI-42**: Audio Notifications — Configurable sound files and TTS announcements on session status changes with per-session cooldown
+
+### 2026-02-12
+
+- **PBI-37**: Task View Enhancements — Sorting, filtering, progress indicators, summary stats, group navigation, and manual refresh for the task panel
+
 ### 2026-02-09
 
 - **PBI-33**: Agent Team Awareness — TUI correctly handles agent team sessions with inline team status display
