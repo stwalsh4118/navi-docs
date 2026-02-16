@@ -96,7 +96,14 @@ sidebar:
 | `Space` | Expand / collapse task group |
 | `/` | Search tasks |
 | `Enter` | Open task (URL or file) |
-| `r` | Refresh tasks |
+| `r` | Refresh tasks (invalidate cache) |
+| `s` | Cycle sort mode (source → status → name → progress) |
+| `S` | Toggle sort direction (ascending / descending) |
+| `f` | Cycle filter mode (all → active → incomplete) |
+| `J` | Jump to next group header |
+| `K` | Jump to previous group header |
+| `e` | Toggle expand / collapse all groups |
+| `a` | Toggle accordion mode |
 | `T` | Close task panel |
 | `Tab` / `Esc` | Return focus to session list |
 | `[` / `]` | Resize |

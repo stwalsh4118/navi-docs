@@ -154,6 +154,59 @@ Parse JSON output → ProviderResult
 Send to Update → render task panel
 ```
 
+### Background Attach Monitor
+
+```
+User presses Enter to attach
+    │
+    ▼
+startAttachMonitor()
+    │
+    ├── Pass lastSessionStates to monitor
+    ├── Create context with cancel
+    └── Launch polling goroutine
+    │
+    ▼
+tea.ExecProcess hands terminal to tmux
+    │
+Monitor goroutine (500ms tick)
+    │
+    ├── Read ~/.claude-sessions/*.json
+    ├── Compare against known states
+    └── Fire audio.Notifier on transitions
+    │
+    ▼
+User detaches (Ctrl-B D)
+    │
+    ▼
+stopAttachMonitor()
+    │
+    ├── Cancel context → goroutine exits
+    ├── Recover final states via monitor.States()
+    └── Assign back to lastSessionStates
+    │
+    ▼
+TUI resumes polling — no duplicate notifications
+```
+
+### navi status CLI
+
+```
+tmux status bar runs `navi status` (every 5s)
+    │
+    ▼
+Read ~/.claude-sessions/*.json via session.ReadStatusFiles()
+    │
+    ▼
+Count sessions by status
+    │
+    ├── Default: show waiting + permission only
+    └── --verbose: show all non-zero counts
+    │
+    ▼
+Print summary and exit
+```
+
 ## Message Flow in the TUI
 
 The Bubble Tea Update function processes messages in priority order:

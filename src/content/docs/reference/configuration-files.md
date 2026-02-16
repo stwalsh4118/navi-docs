@@ -15,6 +15,7 @@ sidebar:
 | `~/.claude-sessions/hooks/tool-tracker.sh` | Tool usage tracking hook |
 | `~/.claude/settings.json` | Claude Code settings (hook configuration) |
 | `~/.config/navi/remotes.yaml` | Remote machine configuration |
+| `~/.config/navi/sounds.yaml` | Audio notification configuration |
 | `.navi.yaml` | Per-project task configuration |
 | `~/.navi/config.yaml` | Global task configuration |
 
@@ -77,6 +78,52 @@ tasks:
     "todo": "open"
     "in_progress": "active"
 ```
+
+## ~/.config/navi/sounds.yaml (Audio Notifications)
+
+Configures audio notifications for session status changes. If this file doesn't exist, audio is disabled.
+
+```yaml
+enabled: true
+
+triggers:
+  waiting: true
+  permission: true
+  working: false
+  idle: false
+  stopped: false
+  done: true
+  error: true
+
+files:
+  waiting: ~/sounds/waiting.wav
+  permission: ~/sounds/permission.mp3
+  done: ~/sounds/done.ogg
+  error: ~/sounds/error.wav
+
+tts:
+  enabled: true
+  template: "{session} — {status}"
+
+cooldown_seconds: 5
+player: auto
+tts_engine: auto
+```
+
+### Fields
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `enabled` | bool | `false` | Master toggle for all audio |
+| `triggers.<status>` | bool | varies | Whether to notify on this status change |
+| `files.<status>` | string | — | Path to sound file (supports `~` expansion) |
+| `tts.enabled` | bool | `true` | Enable text-to-speech announcements |
+| `tts.template` | string | `"{session} — {status}"` | TTS template with `{session}` and `{status}` placeholders |
+| `cooldown_seconds` | int | `5` | Minimum seconds between notifications per session |
+| `player` | string | `"auto"` | Audio player binary or `"auto"` for detection |
+| `tts_engine` | string | `"auto"` | TTS engine binary or `"auto"` for detection |
+
+See [Audio Notifications](/features/audio-notifications/) for full details on player and TTS detection.
 
 ## ~/.claude/settings.json (Hook Config)
 
