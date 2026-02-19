@@ -8,10 +8,34 @@ sidebar:
 
 ## Feature Completion History
 
+### 2026-02-19
+
+- **PBI-58**: TUI Sound Pack Picker — Browse and switch sound packs from within the TUI via `S` keybind with preview, selection, and config persistence
+- **PBI-56**: Enhanced Audio — Sound packs, volume control (global + per-event), multi-sound randomization, mute toggle, and CLI sound test/list commands
+
+### 2026-02-18
+
+- **PBI-55**: PM Refresh Responsiveness — Immediate refresh on PM view entry, loading indicator, manual refresh key, concurrent provider execution
+- **PBI-54**: PM Current-PBI Detection — Multi-strategy resolver using provider hints, session metadata, branch patterns, status heuristics, and provider-agnostic ID resolution
+- **PBI-48**: PM Agent — Persistent Claude CLI session with file-based memory system for contextual project briefings
+- **PBI-38**: Enhanced GitHub PR Integration — CI/CD check statuses, review state, comments, labels, draft/merge status, and change statistics in the TUI
+
+### 2026-02-17
+
+- **PBI-47**: PM TUI View — Three-zone layout (briefing, projects, events) toggled via `P` with responsive design and Tab-based zone focus
+
+### 2026-02-16
+
+- **PBI-53**: Composite Session Status — Main session icon reflects highest-priority status across all agents; external agents promoted to first-class citizens
+- **PBI-46**: PM Engine — Project discovery from sessions, state snapshots, change diffing, and structured event pipeline with 24-hour JSONL rolling log
+- **PBI-45**: External Agent Audio — Audio notifications for OpenCode and other external agent status changes with independent cooldown tracking
+
 ### 2026-02-15
 
 - **PBI-44**: Background Attach Monitor — Audio notifications continue while attached to tmux; `navi status` CLI command for tmux status bar integration
 - **PBI-42**: Audio Notifications — Configurable sound files and TTS announcements on session status changes with per-session cooldown
+- **PBI-41**: Multi-Agent TUI Display — Per-agent status indicators (`[OC ●]`) inline with session rows and agent detail section
+- **PBI-40**: OpenCode Status Hook Integration — OpenCode plugin pushes status updates to shared session JSON; external agents map in status files
 
 ### 2026-02-12
 
