@@ -8,7 +8,7 @@ sidebar:
 
 ## High-Level Architecture
 
-Navi follows a pipeline architecture: **Hooks → JSON → Poller → TUI**.
+Navi follows a pipeline architecture: **Hooks → JSON → Poller → TUI**, with a PM engine layered on top for project-level intelligence.
 
 ```
 Claude Code Session (in tmux)
@@ -22,13 +22,20 @@ Claude Code Session (in tmux)
     │   ~/.claude-sessions/<session>.json   (status files)
     │
     ▼
+OpenCode (in same tmux)
+    │
+    └── navi.js plugin → writes agents.opencode to same JSON
+    │
+    ▼
 Navi TUI (Bubble Tea)
     │
     ├── Session Poller (500ms) ──── reads JSON files ──── cross-refs tmux
     ├── Git Poller (5s cache) ──── runs git commands in session CWDs
     ├── Remote Poller ──────────── SSH to remote machines
-    ├── Task Poller (30s) ──────── runs provider scripts
-    └── Token Reader ───────────── reads ~/.claude/projects/ transcripts
+    ├── Task Poller (30s) ──────── runs provider scripts (4 concurrent workers)
+    ├── Token Reader ───────────── reads ~/.claude/projects/ transcripts
+    ├── Audio Notifier ─────────── plays sounds and TTS on status changes
+    └── PM Engine (5min) ──────── snapshots → diff → events → Claude briefing
 ```
 
 ## Design Principles
@@ -37,13 +44,40 @@ Navi TUI (Bubble Tea)
 - **Polling over events**: The TUI polls the filesystem rather than using file watchers, keeping the design simple and portable.
 - **Source of truth is the filesystem**: Session state is stored as JSON files. If navi crashes, no data is lost.
 - **Feature parity**: Remote sessions support the same operations as local sessions.
+- **Composite status**: The main session icon reflects the highest-priority status across all agents (Claude Code, OpenCode, etc.).
+- **Multi-strategy detection**: Current PBI resolution uses a precedence chain (provider hint → session metadata → branch pattern → status heuristic → fallback).
 
 ## Component Interaction
 
 The TUI is built with [Bubble Tea](https://github.com/charmbracelet/bubbletea), Charm's Go framework for terminal applications. It follows the Elm architecture:
 
-1. **Model**: Application state (sessions, UI state, caches)
+1. **Model**: Application state (sessions, UI state, caches, PM data)
 2. **Update**: Handle messages (key presses, timer ticks, async results)
 3. **View**: Render the current state to the terminal
 
-All async operations (polling, SSH commands, git info) are implemented as Bubble Tea commands that return messages to the Update function.
+All async operations (polling, SSH commands, git info, PM engine, Claude invocation) are implemented as Bubble Tea commands that return messages to the Update function.
+
+## PM Engine Pipeline
+
+The PM engine runs on a 5-minute cycle and provides project-level intelligence:
+
+```
+Sessions & Tasks (existing infrastructure)
+        │
+   PM Engine
+        │
+   DiscoverProjects() → Group sessions by CWD
+        │
+   CaptureSnapshot() per project → Git + Task + Session state
+        │
+   DiffSnapshots() → Detect changes between cycles
+        │
+   Emit Events → Append to ~/.config/navi/pm/events.jsonl
+        │
+   PMOutput {snapshots, events}
+        │
+   ├─→ PM TUI View → Three-zone display
+   └─→ PM Invoker → Claude CLI for briefings
+```
+
+See [Data Flow](/architecture/data-flow/) for detailed pipeline diagrams.

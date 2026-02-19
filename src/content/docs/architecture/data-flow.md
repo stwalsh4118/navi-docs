@@ -25,7 +25,30 @@ Hook Script (notify.sh)
     │   ├── No teammate → Update main session status
     │   └── Has teammate → Update team.agents[] entry
     │
+    ├── Preserves external agents field (agents.opencode, etc.)
+    │
     └── Writes JSON atomically
+```
+
+### External Agent Pipeline
+
+OpenCode (and other agents) write to the same status file via plugins:
+
+```
+OpenCode Lifecycle Event
+    │
+    ▼
+navi.js Plugin
+    │
+    ├── Resolves tmux session name (cached 30s)
+    │
+    ├── Read-modify-write: ~/.claude-sessions/<session>.json
+    │   ├── Preserves all root-level fields (Claude Code's domain)
+    │   └── Updates agents.opencode entry
+    │
+    ├── Duplicate suppression (1s window for same status)
+    │
+    └── Atomic write (temp file + rename)
 ```
 
 ### Status File Format
@@ -47,6 +70,12 @@ Hook Script (notify.sh)
     "agents": [
       {"name": "researcher", "status": "working", "timestamp": 1738972800}
     ]
+  },
+  "agents": {
+    "opencode": {
+      "status": "idle",
+      "timestamp": 1738972780
+    }
   }
 }
 ```
@@ -72,11 +101,24 @@ Cross-reference with `tmux list-sessions`
     ├── Remove entries with no matching tmux session
     │
     ▼
+Compute CompositeStatus() per session
+    │
+    ├── Consider Claude Code + all external agents
+    ├── Return highest-priority status and source
+    │
+    ▼
 SortSessions()
     │
-    ├── Priority statuses first (waiting, permission)
-    ├── Priority teammates next (agents needing attention)
+    ├── Priority statuses first (waiting, permission from any agent)
+    ├── Active sessions next (working from any agent)
     └── Then by timestamp (most recent first)
+    │
+    ▼
+Detect status changes
+    │
+    ├── Compare session states vs lastSessionStates
+    ├── Compare agent states vs lastAgentStates
+    └── Fire audio notifications on transitions
     │
     ▼
 Send sessionsMsg to Update
@@ -107,6 +149,37 @@ Run git commands in CWD
     │
     ▼
 Send gitInfoMsg to Update
+```
+
+### PR Detail Fetching (On-Demand)
+
+```
+User opens git detail view (G key)
+    │
+    ▼
+Check PRDetail cache (60s TTL)
+    │
+    ├── Cache hit → display immediately
+    └── Cache miss ▼
+    │
+    ▼
+gh pr view --json <all fields>
+    │
+    ├── Local: uses working directory context
+    └── Remote: uses -R owner/repo flag
+    │
+    ▼
+Parse PR metadata → PRDetail
+    │
+    ├── Checks: aggregate passed/failed/pending
+    ├── Reviews: per-reviewer decisions
+    └── Merge status, labels, change stats
+    │
+    ▼
+Display in git detail view
+    │
+    ├── If checks pending → start auto-refresh (30s)
+    └── Auto-refresh stops when checks terminal
 ```
 
 ### Token Metrics
@@ -145,7 +218,11 @@ For each project config:
     │   └── Cache miss ▼
     │
     ▼
-Execute provider script with args
+Execute provider scripts (4 concurrent workers)
+    │
+    ├── Bounded concurrency via semaphore channel
+    ├── Per-project error isolation
+    └── Results collected deterministically
     │
     ▼
 Parse JSON output → ProviderResult
@@ -162,7 +239,7 @@ User presses Enter to attach
     ▼
 startAttachMonitor()
     │
-    ├── Pass lastSessionStates to monitor
+    ├── Pass lastSessionStates and lastAgentStates to monitor
     ├── Create context with cancel
     └── Launch polling goroutine
     │
@@ -172,7 +249,8 @@ tea.ExecProcess hands terminal to tmux
 Monitor goroutine (500ms tick)
     │
     ├── Read ~/.claude-sessions/*.json
-    ├── Compare against known states
+    ├── Compare session states against known states
+    ├── Compare agent states against known states
     └── Fire audio.Notifier on transitions
     │
     ▼
@@ -182,8 +260,8 @@ User detaches (Ctrl-B D)
 stopAttachMonitor()
     │
     ├── Cancel context → goroutine exits
-    ├── Recover final states via monitor.States()
-    └── Assign back to lastSessionStates
+    ├── Recover final states via monitor.States() and monitor.AgentStates()
+    └── Assign back to lastSessionStates and lastAgentStates
     │
     ▼
 TUI resumes polling — no duplicate notifications
@@ -207,13 +285,90 @@ Count sessions by status
 Print summary and exit
 ```
 
+### PM Engine Pipeline
+
+```
+PM tick (5min) / View entry / Manual refresh (r key)
+    │
+    ▼
+DiscoverProjects()
+    │
+    ├── Group sessions by expanded CWD
+    ├── Deduplicate via path expansion
+    └── Derive project name from directory basename
+    │
+    ▼
+CaptureSnapshot() per project
+    │
+    ├── Git state: rev-parse HEAD, branch, ahead, dirty
+    ├── Task state: aggregate provider results by status
+    ├── Session state: composite status from grouped sessions
+    ├── Current PBI: multi-strategy resolver
+    │   ├── 1. Provider hint (current_pbi_id)
+    │   ├── 2. Session metadata (current_pbi field)
+    │   ├── 3. Branch pattern (regex matching)
+    │   ├── 4. Status heuristic (InProgress > Agreed > ...)
+    │   └── 5. First group fallback
+    └── Last activity: max timestamp across sessions
+    │
+    ▼
+DiffSnapshots(previous, current)
+    │
+    ├── task_completed: Done count increased
+    ├── task_started: InProgress count increased
+    ├── commit: HEAD SHA changed (runs git log old..new)
+    ├── session_status_change: composite status changed
+    ├── pbi_completed: all tasks done
+    ├── branch_created: branch name changed
+    └── pr_created: PR number 0 → non-zero
+    │
+    ▼
+AppendEvents() to ~/.config/navi/pm/events.jsonl
+    │
+    ├── Prune events older than 24 hours
+    └── Append new events
+    │
+    ▼
+PMOutput {snapshots, events}
+    │
+    ├── Render in PM TUI view (three zones)
+    └── Evaluate triggers for PM agent invocation
+```
+
+### PM Agent Invocation
+
+```
+Trigger event (task_completed, commit, on-demand)
+    │
+    ▼
+BuildInbox(trigger, snapshots, events)
+    │
+    ▼
+InvokeWithRecovery(inbox)
+    │
+    ├── claude -p --output-format json --json-schema <schema>
+    ├── Pipe inbox JSON to stdin
+    ├── Timeout: 120 seconds
+    │
+    ├── Success → ParseOutput() → PMBriefing
+    │   └── CacheOutput() to last-output.json
+    │
+    ├── Failure → LoadCachedOutput() (fallback, marked stale)
+    │
+    └── Rate limit → Exponential backoff (1s, 2s, 4s, max 3 retries)
+    │
+    ▼
+PMBriefing displayed in Zone 1 (briefing area)
+```
+
 ## Message Flow in the TUI
 
 The Bubble Tea Update function processes messages in priority order:
 
-1. **Dialog mode** — Route to dialog-specific handler
-2. **Task panel focus** — Route to task panel handler
-3. **Preview focus** — Route to preview handler
-4. **Search mode** — Route to search handler
-5. **Main keybindings** — Handle navigation, actions, toggles
-6. **Async messages** — Process polling results, command outputs
+1. **Dialog mode** — Route to dialog-specific handler (including sound pack picker)
+2. **PM view** — Route to PM view handler (navigation, expansion, scrolling)
+3. **Task panel focus** — Route to task panel handler
+4. **Preview focus** — Route to preview handler
+5. **Search mode** — Route to search handler
+6. **Main keybindings** — Handle navigation, actions, toggles
+7. **Async messages** — Process polling results, command outputs, PM data

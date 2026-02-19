@@ -15,18 +15,20 @@ navi/
 │       └── main.go                 # Entry point — initializes Bubble Tea
 ├── internal/
 │   ├── session/
-│   │   └── session.go              # Session types, status constants, sorting
+│   │   └── session.go              # Session types, status constants, composite status, sorting
 │   ├── tui/
 │   │   ├── model.go                # Main TUI model and Update logic
-│   │   ├── view.go                 # View rendering (layout, headers, footers)
-│   │   ├── dialog.go               # Dialog modes (new, kill, rename, git, metrics)
+│   │   ├── view.go                 # View rendering (layout, headers, footers, agents)
+│   │   ├── dialog.go               # Dialog modes (new, kill, rename, git, metrics, sound picker)
 │   │   ├── contentviewer.go        # Full-screen content viewer
 │   │   ├── input.go                # Text input handling
 │   │   ├── filter.go               # Search, filtering, sorting logic
 │   │   ├── preview.go              # Preview pane capture and rendering
-│   │   ├── sessions.go             # Session list rendering
+│   │   ├── sessions.go             # Session list rendering, PR commands
 │   │   ├── taskview.go             # Task panel rendering
-│   │   ├── tasks.go                # Task panel state management
+│   │   ├── tasks.go                # Task panel state, concurrent provider execution
+│   │   ├── pmview.go               # PM three-zone view rendering
+│   │   ├── pm.go                   # PM engine commands, invoker commands
 │   │   └── styles.go               # Color schemes and styling constants
 │   ├── task/
 │   │   ├── types.go                # Task, TaskGroup, ProviderResult types
@@ -40,11 +42,34 @@ navi/
 │   │   ├── actions.go              # Remote session actions (kill, rename, dismiss)
 │   │   └── ...                     # SSH pool, config types
 │   ├── git/
-│   │   └── git.go                  # Git info (branch, PR, diff)
+│   │   ├── git.go                  # Git info (branch, PR number, diff)
+│   │   └── pr.go                   # PR detail, checks, reviews, comments
 │   ├── metrics/
 │   │   └── metrics.go              # Token, time, tool metrics
 │   ├── tokens/
 │   │   └── ...                     # Token parsing from transcripts
+│   ├── audio/
+│   │   ├── config.go               # Config, VolumeConfig, SavePackSelection
+│   │   ├── pack.go                 # ScanPack, ResolveSoundFiles, ListPacks
+│   │   ├── player.go               # Audio player with volume control
+│   │   ├── notifier.go             # Notification manager (mute, packs, randomization)
+│   │   └── tts.go                  # Text-to-speech engine
+│   ├── monitor/
+│   │   └── monitor.go              # Background attach monitor (session + agent states)
+│   ├── pm/
+│   │   ├── types.go                # ProjectSnapshot, Event, TaskCounts, PMOutput
+│   │   ├── briefing.go             # PMBriefing, ProjectBriefing, AttentionItem
+│   │   ├── engine.go               # Engine orchestration pipeline
+│   │   ├── snapshot.go             # Project discovery, snapshot capture
+│   │   ├── diff.go                 # Snapshot diffing, event generation
+│   │   ├── eventlog.go             # JSONL event log (append, read, prune)
+│   │   ├── invoker.go              # Claude CLI invocation wrapper
+│   │   ├── inbox.go                # Inbox payload construction
+│   │   ├── output.go               # Output parsing, caching
+│   │   ├── recovery.go             # Error recovery and resilience
+│   │   ├── storage.go              # Directory layout, file I/O
+│   │   ├── resolver.go             # Multi-strategy current-PBI resolution
+│   │   └── branchinfer.go          # Branch pattern inference utility
 │   ├── pathutil/
 │   │   └── pathutil.go             # Path utilities (~ expansion)
 │   └── debug/
@@ -53,12 +78,14 @@ navi/
 │   ├── notify.sh                   # Main hook — writes session status JSON
 │   ├── tool-tracker.sh             # Tool usage tracking hook
 │   └── config.json                 # Hook event configuration template
+├── plugins/
+│   └── opencode/
+│       └── navi.js                 # OpenCode status hook plugin
 ├── providers/
 │   ├── markdown-tasks.sh           # Markdown task file provider
 │   └── github-issues.sh            # GitHub issues provider
 ├── install.sh                      # Installation script
 ├── .navi.yaml                      # Project task configuration
-├── prd.md                          # Product requirements document
 ├── go.mod / go.sum                 # Go module dependencies
 └── docs/
     └── delivery/                   # PBI and task documentation
@@ -68,23 +95,26 @@ navi/
 
 ### `cmd/navi`
 
-Entry point. Initializes the Bubble Tea program with the TUI model.
+Entry point. Parses subcommands (`status`, `sound`) and initializes the Bubble Tea program with the TUI model.
 
 ### `internal/session`
 
-Defines the core `Info` struct that represents a Claude Code session. Includes status constants (`StatusWaiting`, `StatusWorking`, etc.), the `TeamInfo`/`AgentInfo` types for agent teams, and the `SortSessions` function for priority ordering.
+Defines the core `Info` struct that represents a Claude Code session. Includes status constants (`StatusWaiting`, `StatusWorking`, etc.), the `TeamInfo`/`AgentInfo` types for Claude Code agent teams, the `ExternalAgent` type for OpenCode and other agents, the `CompositeStatus()` function for multi-agent status aggregation, and `SortSessions()` for priority ordering.
 
 ### `internal/tui`
 
 The largest package — contains all TUI logic. Split across multiple files by responsibility:
 
-- **model.go**: The main `Model` struct (~100 fields) and `Update` function
-- **view.go**: All rendering logic including layout calculations
-- **dialog.go**: Seven dialog modes with their own input handling
+- **model.go**: The main `Model` struct and `Update` function
+- **view.go**: All rendering logic including layout calculations and agent indicators
+- **dialog.go**: Dialog modes including sound pack picker
 - **filter.go**: Search, status filters, sort modes
 - **preview.go**: tmux pane capture and preview rendering
-- **tasks.go / taskview.go**: Task panel state and rendering
+- **tasks.go / taskview.go**: Task panel state, rendering, and concurrent provider execution
+- **sessions.go**: Session list rendering and PR fetch commands
 - **contentviewer.go**: Full-screen content overlay
+- **pmview.go**: PM three-zone view (briefing, projects, events)
+- **pm.go**: PM engine and invoker command integration
 
 ### `internal/task`
 
@@ -96,7 +126,19 @@ SSH-based remote session management. Handles connection pooling via `ControlMast
 
 ### `internal/git`
 
-Local git operations. Extracts branch info, dirty status, ahead/behind counts, and GitHub PR numbers using `git` and `gh` CLI tools.
+Local git operations. Extracts branch info, dirty status, ahead/behind counts. Includes PR detail fetching (checks, reviews, comments, labels) via the `gh` CLI.
+
+### `internal/audio`
+
+Audio notification system. Manages sound pack scanning and resolution, volume control with per-backend CLI flags, mute toggle, random variant selection, cooldown tracking, and TTS integration.
+
+### `internal/monitor`
+
+Background attach monitor. Runs while the terminal is attached to tmux, tracking both session and agent state transitions to fire audio notifications.
+
+### `internal/pm`
+
+Project Manager engine. Handles project discovery, state snapshots, change diffing, event persistence, Claude CLI invocation, briefing parsing, memory system management, and multi-strategy current-PBI resolution.
 
 ### `internal/metrics`
 
@@ -105,6 +147,10 @@ Metrics types for token usage, time tracking, and tool activity. Provides format
 ### `hooks/`
 
 Shell scripts that Claude Code executes via its hook system. These run outside of navi and write JSON to `~/.claude-sessions/`.
+
+### `plugins/`
+
+Agent plugins. The OpenCode plugin (`plugins/opencode/navi.js`) writes agent status to the shared session JSON file.
 
 ### `providers/`
 
