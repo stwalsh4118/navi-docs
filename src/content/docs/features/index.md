@@ -18,18 +18,23 @@ Navi is a terminal dashboard for monitoring and managing Claude Code sessions. H
 - **[Preview Pane](/features/preview-pane/)** — View recent session output without attaching
 - **[Task View](/features/task-view/)** — Display project tasks from any source via pluggable providers
 - **[Content Viewer](/features/content-viewer/)** — View files, diffs, and task details in-app
+- **[PM Dashboard](/features/pm-dashboard/)** — Bird's-eye view of all projects with AI-powered briefings
 
 ## Intelligence
 
 - **[Session Metrics](/features/session-metrics/)** — Token usage, time tracking, and tool activity per session
 - **[Git Integration](/features/git-integration/)** — Branch, status, PR detection, and diff preview
+- **[GitHub PR Integration](/features/github-pr-integration/)** — CI/CD checks, review state, comments, labels, and change stats
 - **[Search and Filter](/features/search-and-filter/)** — Exact-match search with cycling, status filters, and sort modes
 
 ## Scale
 
 - **[Remote Sessions](/features/remote-sessions/)** — Monitor and manage sessions across multiple machines via SSH
 - **[Agent Teams](/features/agent-teams/)** — Track multi-agent workflows with inline team status
+- **[Multi-Agent Support](/features/multi-agent-support/)** — OpenCode and other external agents as first-class citizens
 
-## UI
+## UX
 
+- **[Audio Notifications](/features/audio-notifications/)** — Sound packs, volume control, TTS, and mute toggle
+- **[Background Monitor](/features/background-monitor/)** — Audio continues while attached to tmux, status bar integration
 - **[Scrollable Panels](/features/scrollable-panels/)** — All panels support scrolling for overflow content

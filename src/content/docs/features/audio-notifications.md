@@ -8,7 +8,7 @@ sidebar:
 
 ## Overview
 
-Audio notifications play sound files and announce session names via text-to-speech when session statuses change. This lets you monitor your Claude sessions hands-free — hear when a session needs permission, finishes work, or hits an error without watching the TUI.
+Audio notifications play sound files and announce session names via text-to-speech when session statuses change. Sound packs provide themed audio, volume is configurable per-event, and multiple sound variants per event are randomly selected for variety. Notifications fire for both Claude Code and external agents (OpenCode, etc.).
 
 ## Quick Start
 
@@ -16,6 +16,7 @@ Audio notifications play sound files and announce session names via text-to-spee
 
 ```yaml
 enabled: true
+pack: starcraft
 
 triggers:
   waiting: true
@@ -23,37 +24,152 @@ triggers:
   done: true
   error: true
 
-files:
-  waiting: ~/sounds/waiting.wav
-  permission: ~/sounds/permission.mp3
-  done: ~/sounds/done.ogg
-  error: ~/sounds/error.wav
-
 tts:
   enabled: true
 ```
 
-2. Ensure you have a system audio player installed (`paplay`, `aplay`, `mpv`, or `ffplay` on Linux; `afplay` on macOS)
+2. Install a sound pack at `~/.config/navi/soundpacks/starcraft/` with audio files named by event (e.g., `waiting.wav`, `done.mp3`)
 
-3. Notifications fire automatically when session statuses change.
+3. Ensure a system audio player is installed (`paplay`, `aplay`, `mpv`, or `ffplay` on Linux; `afplay` on macOS)
+
+4. Notifications fire automatically when session statuses change.
+
+## Sound Packs
+
+Sound packs are directories of audio files organized by event at `~/.config/navi/soundpacks/`:
+
+```
+~/.config/navi/soundpacks/
+  starcraft/
+    waiting.wav
+    waiting-1.wav        # Multi-variant
+    waiting-2.wav        # Multi-variant
+    permission.wav
+    done.wav
+    error-1.wav          # Multi-variant
+    error-2.wav          # Multi-variant
+  retro/
+    waiting.mp3
+    permission.mp3
+    done.mp3
+    error.mp3
+```
+
+### File Naming
+
+- **Single**: `<event>.ext` (e.g., `done.wav`)
+- **Multi-variant**: `<event>-<N>.ext` (e.g., `waiting-1.wav`, `waiting-2.wav`)
+- **Supported formats**: `.wav`, `.mp3`, `.ogg`, `.flac`
+
+When multiple files exist for an event, one is randomly selected on each notification.
+
+### Managing Sound Packs
+
+#### TUI Picker
+
+Press `S` in the session view to open the sound pack picker:
+
+```
+╭─────────────────────────────────────────╮
+│           Sound Packs                   │
+│                                         │
+│ ✓ starcraft    (4 events, 7 files)     │
+│   retro        (4 events, 4 files)     │
+│   minimal      (3 events, 3 files)     │
+│                                         │
+│ ↑↓: navigate  Enter: select  p:        │
+│   preview  Esc: close                  │
+╰─────────────────────────────────────────╯
+```
+
+| Key | Action |
+|-----|--------|
+| `↑`/`↓` or `k`/`j` | Navigate packs |
+| `Enter` | Select pack (immediate hot-swap, persisted to config) |
+| `p` or `Space` | Preview a random sound from highlighted pack |
+| `Esc` | Close without changing |
+
+If no packs are installed, a helpful message directs you to the soundpacks directory.
+
+#### CLI Commands
+
+```bash
+navi sound list              # List available packs with event/file counts
+navi sound test <event>      # Play configured sound for an event
+navi sound test-all          # Play all enabled trigger events sequentially
+```
+
+## Volume Control
+
+```yaml
+volume:
+  global: 80                 # 0-100, default 100
+  events:                    # Per-event multiplier (0.0-1.0)
+    error: 1.0               # Errors at full configured volume
+    done: 0.7                # Done at 70% of global = 56 effective
+    waiting: 0.5             # Waiting at 50% of global = 40 effective
+```
+
+**Effective volume** = `global * event_multiplier`, clamped to 0-100. A volume of 0 skips playback entirely.
+
+### Backend Volume Flags
+
+| Player | Volume Flag |
+|--------|------------|
+| `paplay` | `--volume=0-65536` (PulseAudio native) |
+| `pw-play` | `--volume=0.0-1.0` (float) |
+| `afplay` | `-v 0.0-1.0` (float) |
+| `mpv` | `--volume=0-100` (percentage) |
+| `ffplay` | `-volume 0-100` (percentage) |
+| `aplay` | No volume flag (uses system mixer) |
+
+## Mute Toggle
+
+Press `m` in the session view to toggle mute. When muted:
+
+- No sounds or TTS play
+- "MUTED" indicator appears in the status line
+- Mute state is session-only (resets on restart)
 
 ## How It Works
 
 The TUI polls sessions every 500ms. When a session's status changes, the audio system:
 
-1. Checks if notifications are enabled and the status has a trigger
-2. Checks per-session cooldown (default 5 seconds)
-3. Plays the mapped sound file (if configured for that status)
-4. Speaks a TTS announcement after a 150ms delay (if TTS enabled)
+1. Checks if notifications are enabled and not muted
+2. Checks if the status has a trigger enabled
+3. Checks per-session cooldown (default 5 seconds)
+4. Resolves the sound file:
+   - First: explicit `files.<status>` override in config
+   - Then: active sound pack (random selection if multiple variants)
+   - Otherwise: no sound
+5. Plays the sound with effective volume
+6. Speaks a TTS announcement after a 150ms delay (if TTS enabled)
 
-All playback is non-blocking — audio runs in background goroutines and never stalls the TUI. The first poll after startup is silent to avoid a burst of notifications.
+All playback is non-blocking — audio runs in background goroutines. The first poll after startup is silent to avoid a burst of notifications.
+
+### External Agent Notifications
+
+Audio notifications also fire for external agent (OpenCode, etc.) status changes:
+
+- Each agent gets independent cooldown tracking via composite key (`sessionName:agentType`)
+- Same sound/TTS configuration applies to all agents
+- The background attach monitor also tracks agent state transitions
+- On first poll, agent states are initialized without firing notifications
 
 ## Configuration
 
-Configuration lives at `~/.config/navi/sounds.yaml`. If the file is missing, audio is disabled by default.
+Full configuration at `~/.config/navi/sounds.yaml`:
 
 ```yaml
 enabled: true                    # Master toggle
+pack: starcraft                  # Active sound pack name
+
+volume:                          # Volume settings
+  global: 80                     # 0-100, default 100
+  events:                        # Per-event multiplier (0.0-1.0)
+    error: 1.0
+    done: 0.7
+    waiting: 0.5
 
 triggers:                        # Per-status enable/disable
   waiting: true
@@ -64,15 +180,12 @@ triggers:                        # Per-status enable/disable
   done: true
   error: true
 
-files:                           # Status → sound file path
-  waiting: ~/sounds/waiting.wav
-  permission: ~/sounds/permission.mp3
-  done: ~/sounds/done.ogg
-  error: ~/sounds/error.wav
+files:                           # Explicit per-status file overrides
+  permission: ~/custom/alert.wav # Overrides pack for this event
 
 tts:
   enabled: true                  # Text-to-speech announcements
-  template: "{session} — {status}"  # Announcement format
+  template: "{session} — {status}"
 
 cooldown_seconds: 5              # Per-session cooldown interval
 player: auto                     # Audio player: auto, paplay, afplay, aplay, mpv, ffplay
@@ -84,8 +197,11 @@ tts_engine: auto                 # TTS engine: auto, say, espeak-ng, espeak, spd
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `enabled` | bool | `false` | Master toggle for all audio |
+| `pack` | string | — | Active sound pack directory name |
+| `volume.global` | int | `100` | Global volume (0-100) |
+| `volume.events.<status>` | float | `1.0` | Per-event volume multiplier (0.0-1.0) |
 | `triggers.<status>` | bool | varies | Whether to notify on this status |
-| `files.<status>` | string | — | Path to sound file (supports `~` expansion) |
+| `files.<status>` | string | — | Explicit file override (takes precedence over pack) |
 | `tts.enabled` | bool | `true` | Enable text-to-speech announcements |
 | `tts.template` | string | `"{session} — {status}"` | TTS announcement template |
 | `cooldown_seconds` | int | `5` | Minimum seconds between notifications per session |
@@ -104,6 +220,10 @@ tts_engine: auto                 # TTS engine: auto, say, espeak-ng, espeak, spd
 | `done` | enabled |
 | `error` | enabled |
 
+### Backwards Compatibility
+
+The `files:` config still works without sound packs. If both `pack:` and `files:` are set, explicit `files:` entries override the pack for those specific events.
+
 ## Audio Player Detection
 
 When `player: auto`, navi searches for available backends:
@@ -112,8 +232,6 @@ When `player: auto`, navi searches for available backends:
 |----------|----------------|
 | **macOS** | `afplay` (built-in) |
 | **Linux** | `paplay` (PulseAudio) → `aplay` (ALSA) → `ffplay` (FFmpeg) → `mpv` |
-
-You can override detection by setting `player` to a specific binary name.
 
 ## TTS Engine Detection
 
@@ -124,11 +242,7 @@ When `tts_engine: auto`, navi searches for available backends:
 | **macOS** | `say` (built-in) |
 | **Linux** | `espeak-ng` → `espeak` → `spd-say` (speech-dispatcher) |
 
-The TTS template supports `{session}` and `{status}` placeholders, replaced with the session name and new status at announcement time.
-
-## Cooldown
-
-Per-session cooldowns prevent rapid-fire notifications. If a session changes status multiple times within the cooldown window (default 5 seconds), only the first transition triggers audio. Each session has its own independent cooldown timer.
+The TTS template supports `{session}` and `{status}` placeholders.
 
 ## Graceful Degradation
 
@@ -136,9 +250,11 @@ Per-session cooldowns prevent rapid-fire notifications. If a session changes sta
 - No audio player found: notifications silently skipped
 - No TTS engine found: sound plays but no speech
 - Missing sound file for a status: sound skipped, TTS still plays
+- No sound packs installed: pack picker shows helpful message
 - Malformed YAML: error returned, audio disabled
 
 ## Related Features
 
 - [Session Monitoring](/features/session-monitoring/) — Status updates that trigger notifications
+- [Multi-Agent Support](/features/multi-agent-support/) — External agent status changes also trigger audio
 - [Background Monitor](/features/background-monitor/) — Audio notifications continue while attached to tmux
