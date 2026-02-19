@@ -19,6 +19,8 @@ Each session has a JSON file at `~/.claude-sessions/<tmux-session-name>.json`.
   "message": "Implementing login feature",
   "cwd": "/home/user/projects/app",
   "timestamp": 1738972800,
+  "current_pbi": "PBI-38",
+  "current_pbi_title": "Enhanced GitHub PR Integration",
   "git": {
     "branch": "feature/login",
     "dirty": true,
@@ -61,6 +63,12 @@ Each session has a JSON file at `~/.claude-sessions/<tmux-session-name>.json`.
         "timestamp": 1738972850
       }
     ]
+  },
+  "agents": {
+    "opencode": {
+      "status": "idle",
+      "timestamp": 1738972780
+    }
   }
 }
 ```
@@ -70,7 +78,7 @@ Each session has a JSON file at `~/.claude-sessions/<tmux-session-name>.json`.
 | Field | Type | Description |
 |-------|------|-------------|
 | `tmux_session` | string | tmux session name (used as unique key) |
-| `status` | string | Current session status |
+| `status` | string | Current session status (Claude Code) |
 | `message` | string | Status message or question |
 | `cwd` | string | Working directory path |
 | `timestamp` | int64 | Unix timestamp of last status update |
@@ -79,14 +87,49 @@ Each session has a JSON file at `~/.claude-sessions/<tmux-session-name>.json`.
 
 | Field | Type | Description |
 |-------|------|-------------|
+| `current_pbi` | string | Currently active PBI ID (set by session metadata) |
+| `current_pbi_title` | string | Human-readable PBI title |
 | `git` | object | Git repository information |
 | `metrics` | object | Time and tool metrics |
 | `tokens` | object | Token usage from transcripts |
-| `team` | object | Agent team information |
+| `team` | object | Claude Code agent team information |
+| `agents` | object | External agent statuses (OpenCode, etc.) |
+
+### External Agents
+
+The `agents` field is a map keyed by agent type:
+
+```json
+{
+  "agents": {
+    "opencode": {
+      "status": "working",
+      "timestamp": 1738972800
+    }
+  }
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `agents.<type>.status` | string | Agent's current status |
+| `agents.<type>.timestamp` | int64 | Unix timestamp of last agent update |
+
+Both Claude Code hooks (`notify.sh`) and external agent plugins preserve each other's fields during read-modify-write operations.
 
 ### Status Values
 
-See [Status Icons](/reference/status-icons/) for the complete list of valid status values.
+See [Status Icons](/reference/status-icons/) for the complete list of valid status values. The same status values apply to all agents (Claude Code, team agents, and external agents).
+
+### Composite Status
+
+The TUI computes a composite status across all agents using priority ordering:
+
+```
+permission > waiting > working > error > idle > stopped > done
+```
+
+The highest-priority status across Claude Code and all external agents becomes the session's display status. See [Multi-Agent Support](/features/multi-agent-support/) for details.
 
 ## Task Provider Output
 
@@ -94,19 +137,22 @@ Task providers output JSON to stdout:
 
 ```json
 {
+  "current_pbi_id": "PBI-38",
+  "current_pbi_title": "Enhanced GitHub PR Integration",
   "groups": [
     {
-      "id": "1",
-      "title": "Sprint 1",
-      "status": "in_progress",
+      "id": "PBI-38",
+      "title": "Enhanced GitHub PR Integration",
+      "status": "InProgress",
+      "is_current": true,
       "url": "https://github.com/org/repo/milestone/1",
       "tasks": [
         {
-          "id": "1-1",
-          "title": "Fix login bug",
-          "status": "todo",
+          "id": "38-1",
+          "title": "PR Detail Data Types",
+          "status": "Done",
           "assignee": "alice",
-          "labels": ["bug", "auth"],
+          "labels": ["feature"],
           "priority": 1,
           "url": "https://github.com/org/repo/issues/42",
           "created": "2026-01-01T00:00:00Z",
@@ -117,3 +163,13 @@ Task providers output JSON to stdout:
   ]
 }
 ```
+
+### Provider Hint Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `current_pbi_id` | string | Provider's hint for which PBI is currently active |
+| `current_pbi_title` | string | Human-readable title for the current PBI |
+| `groups[].is_current` | bool | Whether this group is the currently active PBI |
+
+These fields are used by the PM engine's [current-PBI resolver](/features/pm-dashboard/#current-pbi-detection).

@@ -16,6 +16,9 @@ sidebar:
 | `~/.claude/settings.json` | Claude Code settings (hook configuration) |
 | `~/.config/navi/remotes.yaml` | Remote machine configuration |
 | `~/.config/navi/sounds.yaml` | Audio notification configuration |
+| `~/.config/navi/soundpacks/` | Sound pack directories |
+| `~/.config/navi/pm/` | PM agent data (events, memory, briefings) |
+| `~/.config/opencode/plugins/navi.js` | OpenCode status plugin |
 | `.navi.yaml` | Per-project task configuration |
 | `~/.navi/config.yaml` | Global task configuration |
 
@@ -85,6 +88,14 @@ Configures audio notifications for session status changes. If this file doesn't 
 
 ```yaml
 enabled: true
+pack: starcraft                  # Active sound pack name
+
+volume:                          # Volume settings
+  global: 80                     # 0-100, default 100
+  events:                        # Per-event multiplier (0.0-1.0)
+    error: 1.0
+    done: 0.7
+    waiting: 0.5
 
 triggers:
   waiting: true
@@ -95,7 +106,7 @@ triggers:
   done: true
   error: true
 
-files:
+files:                           # Explicit per-status file overrides
   waiting: ~/sounds/waiting.wav
   permission: ~/sounds/permission.mp3
   done: ~/sounds/done.ogg
@@ -115,15 +126,57 @@ tts_engine: auto
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
 | `enabled` | bool | `false` | Master toggle for all audio |
+| `pack` | string | — | Active sound pack directory name |
+| `volume.global` | int | `100` | Global volume (0-100) |
+| `volume.events.<status>` | float | `1.0` | Per-event volume multiplier (0.0-1.0) |
 | `triggers.<status>` | bool | varies | Whether to notify on this status change |
-| `files.<status>` | string | — | Path to sound file (supports `~` expansion) |
+| `files.<status>` | string | — | Explicit file override (takes precedence over pack) |
 | `tts.enabled` | bool | `true` | Enable text-to-speech announcements |
 | `tts.template` | string | `"{session} — {status}"` | TTS template with `{session}` and `{status}` placeholders |
 | `cooldown_seconds` | int | `5` | Minimum seconds between notifications per session |
 | `player` | string | `"auto"` | Audio player binary or `"auto"` for detection |
 | `tts_engine` | string | `"auto"` | TTS engine binary or `"auto"` for detection |
 
-See [Audio Notifications](/features/audio-notifications/) for full details on player and TTS detection.
+See [Audio Notifications](/features/audio-notifications/) for full details on sound packs, volume control, player and TTS detection.
+
+## ~/.config/navi/soundpacks/ (Sound Packs)
+
+Each subdirectory is a sound pack containing audio files named by event:
+
+```
+~/.config/navi/soundpacks/
+  starcraft/
+    waiting.wav
+    waiting-1.wav          # Multi-variant (randomly selected)
+    waiting-2.wav
+    permission.wav
+    done.wav
+    error.wav
+  retro/
+    waiting.mp3
+    done.mp3
+```
+
+Supported formats: `.wav`, `.mp3`, `.ogg`, `.flac`. See [Audio Notifications](/features/audio-notifications/) for details.
+
+## ~/.config/navi/pm/ (PM Agent Data)
+
+Stores PM engine data and Claude agent memory. Created automatically on first use.
+
+```
+~/.config/navi/pm/
+├── events.jsonl              # Event log (24-hour rolling)
+├── system-prompt.md          # Claude's instructions (code-controlled)
+├── output-schema.json        # JSON schema for output (code-controlled)
+├── last-output.json          # Cached briefing for fallback
+└── memory/
+    ├── short-term.md         # Recent context (~2000 tokens)
+    ├── long-term.md          # Historical patterns (~3000 tokens)
+    └── projects/
+        └── <project>.md      # Per-project memory (~1000 tokens)
+```
+
+See [PM Dashboard](/features/pm-dashboard/) for details on the PM agent and memory system.
 
 ## ~/.claude/settings.json (Hook Config)
 

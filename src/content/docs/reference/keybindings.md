@@ -37,6 +37,7 @@ sidebar:
 |-----|--------|
 | `p` | Toggle preview pane |
 | `T` | Toggle task panel |
+| `P` | Toggle PM dashboard |
 | `Tab` | Focus preview / task panel |
 | `L` | Cycle preview layout (Side / Bottom / Inline) |
 | `W` | Toggle preview line wrapping |
@@ -63,6 +64,13 @@ sidebar:
 | `o` | Toggle offline sessions |
 | `s` | Cycle sort mode |
 | `f` | Cycle session filter (All / Local / Remote) |
+
+### Audio
+
+| Key | Action |
+|-----|--------|
+| `m` | Toggle mute (audio notifications) |
+| `S` | Open sound pack picker |
 
 ## Search Mode
 
@@ -109,6 +117,16 @@ sidebar:
 | `[` / `]` | Resize |
 | `q` | Quit navi |
 
+## Git Detail View
+
+| Key | Action |
+|-----|--------|
+| `r` | Refresh PR data from GitHub |
+| `c` | View PR comments |
+| `o` | Open PR in browser |
+| `d` | View git diff |
+| `Esc` | Close detail view |
+
 ## Content Viewer
 
 | Key | Action |
@@ -120,6 +138,31 @@ sidebar:
 | `g` | Go to top |
 | `G` | Go to bottom |
 | `Esc` | Close viewer |
+
+## PM Dashboard
+
+| Key | Action |
+|-----|--------|
+| `P` | Close PM view |
+| `Tab` | Switch focus between projects and events |
+| `↑` / `↓` | Navigate projects (zone 2) or scroll events (zone 3) |
+| `Enter` | Jump to filtered sessions for selected project |
+| `Space` | Expand / collapse project row |
+| `PgUp` / `PgDn` | Page scroll events |
+| `g` / `G` | Jump to top / bottom of events |
+| `i` | Trigger on-demand PM briefing |
+| `r` | Manual refresh (invalidate caches) |
+| `Esc` | Close PM view |
+| `q` | Quit navi |
+
+## Sound Pack Picker
+
+| Key | Action |
+|-----|--------|
+| `↑` / `↓` or `k` / `j` | Navigate packs |
+| `Enter` | Select pack (hot-swap + persist) |
+| `p` / `Space` | Preview sound from highlighted pack |
+| `Esc` | Close without changing |
 
 ## Dialogs (New Session, Rename)
 
