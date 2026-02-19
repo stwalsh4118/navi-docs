@@ -1,7 +1,7 @@
 {
   "version": 1,
   "project": "navi",
-  "lastSync": "2026-02-15T00:00:00Z",
+  "lastSync": "2026-02-19T12:00:00Z",
   "pbis": {
     "1": {
       "documented": true,
@@ -143,9 +143,30 @@
       "tasksHash": "5bcec5c5691058432951aa06c780adbc121cf3b4fe84cfda1d39f1d1cd733219",
       "docsPages": ["features/task-view.md"]
     },
+    "38": {
+      "documented": true,
+      "lastDocumented": "2026-02-19T12:00:00Z",
+      "prdHash": "f4c555b86ec393edeff33b4bfc83301907aa02c8dd3725dfad6d06fc124253b1",
+      "tasksHash": "052d43a682816e5bc4a46bac9c8f25149193a044c20d7b487959f4abd1f22b0a",
+      "docsPages": ["features/github-pr-integration.md"]
+    },
+    "40": {
+      "documented": true,
+      "lastDocumented": "2026-02-19T12:00:00Z",
+      "prdHash": "e6005d2842ba7946e40ea7772dd5831864500119f38098a94123037e79b38024",
+      "tasksHash": "b85b164ba6e4771148853f19724c3439fbf63a2d81b68bcd11be624b49efca79",
+      "docsPages": ["features/multi-agent-support.md"]
+    },
+    "41": {
+      "documented": true,
+      "lastDocumented": "2026-02-19T12:00:00Z",
+      "prdHash": "895fac1f2355a3507b9ddba3ca7a01998408a11b4d6e5e14740125c61a6b6a08",
+      "tasksHash": "58aba4baa4feb2fa486480d065df0a872417ac6c70a4f1049f17243765563cca",
+      "docsPages": ["features/multi-agent-support.md"]
+    },
     "42": {
       "documented": true,
-      "lastDocumented": "2026-02-15T00:00:00Z",
+      "lastDocumented": "2026-02-19T12:00:00Z",
       "prdHash": "5e9a4d6d31209d0ad7afbdd293d748ddab2f46c18c53bc172eaabbc5a0bbe745",
       "tasksHash": "acf31f25d1554d38e9e677ed8ab1f2dbde642fecbba8e7e36d7b9d0b0f128263",
       "docsPages": ["features/audio-notifications.md"]
@@ -156,6 +177,69 @@
       "prdHash": "d379abacbf6277f783336d838c764f7bfc24bf7d66c8ff77aafa9075badb2f1e",
       "tasksHash": "aa111d61d09d6dd965c95b0d382e978af8d780a8b39a403582e97f46ed729732",
       "docsPages": ["features/background-monitor.md"]
+    },
+    "45": {
+      "documented": true,
+      "lastDocumented": "2026-02-19T12:00:00Z",
+      "prdHash": "fe995d4231396fce72fda1712ca0d937746aed96c7e282d213350765b82974d6",
+      "tasksHash": "061e3a4b4b20d504f2e052758b759a94bac95e54b90f914ff734f4dccc691cdd",
+      "docsPages": ["features/audio-notifications.md"]
+    },
+    "46": {
+      "documented": true,
+      "lastDocumented": "2026-02-19T12:00:00Z",
+      "prdHash": "65e3fe23563b3cf518af0075bcfbf6703fe1c83a8f5032260d5ea7e73493ca64",
+      "tasksHash": "fbd88581efbe64f21eb77fee1f1c8b464cdf71734077db0d841881ad9dc51c6e",
+      "docsPages": ["features/pm-dashboard.md"]
+    },
+    "47": {
+      "documented": true,
+      "lastDocumented": "2026-02-19T12:00:00Z",
+      "prdHash": "8b356782df4d598e86e709b8b9da5cd8337eb1ebc2e05b2181b2d0aebb0c3312",
+      "tasksHash": "ba115995fc8af46efc79803050c1c793e2bc713fdd4a95c89ad6042f4cadb62b",
+      "docsPages": ["features/pm-dashboard.md"]
+    },
+    "48": {
+      "documented": true,
+      "lastDocumented": "2026-02-19T12:00:00Z",
+      "prdHash": "b4a88b7df4446fe1549395e65aee0c9ce373aeace11ed0308f5d0191528f08da",
+      "tasksHash": "92e96d268fc807d12a07ae2a67e17f1611c2dff0cd28cbc53d7a9bb85fc68bcf",
+      "docsPages": ["features/pm-dashboard.md"]
+    },
+    "53": {
+      "documented": true,
+      "lastDocumented": "2026-02-19T12:00:00Z",
+      "prdHash": "00c6f12b5a24174e4e4eb7d95c27c1ddc45d358f84e8da865febf87a54c16b01",
+      "tasksHash": "96999dca1d3e7b3e4d41fd0e6edfe76123c9d40a22ad81c139f03fa93c239032",
+      "docsPages": ["features/multi-agent-support.md"]
+    },
+    "54": {
+      "documented": true,
+      "lastDocumented": "2026-02-19T12:00:00Z",
+      "prdHash": "4459b1732b04879ebbcabf9f0ed9a048d9f3ac7ca7cdef26cec3d27ff2263189",
+      "tasksHash": "bfdaac16c9217e8f9a3a9ad318c5c7e7c7d9a45374c1009c5595365f8744344c",
+      "docsPages": ["features/pm-dashboard.md"]
+    },
+    "55": {
+      "documented": true,
+      "lastDocumented": "2026-02-19T12:00:00Z",
+      "prdHash": "8f596d5bf75a5bee77ed857c53cf5e52a3eeb9368d45f004e33ebf18df11c102",
+      "tasksHash": "0b9b03fecc8d46d75c82b96875277fa206ec09a261cb52c861f85cb195f2c72f",
+      "docsPages": ["features/pm-dashboard.md"]
+    },
+    "56": {
+      "documented": true,
+      "lastDocumented": "2026-02-19T12:00:00Z",
+      "prdHash": "2fc102df580d7690e84a7b18e99d13a8acb5a4def7c8dfce9a0577a64d8198ae",
+      "tasksHash": "664ca186341900864be21e7182ff14c79f2f416250d480abf33829f57519d9a6",
+      "docsPages": ["features/audio-notifications.md"]
+    },
+    "58": {
+      "documented": true,
+      "lastDocumented": "2026-02-19T12:00:00Z",
+      "prdHash": "51a915b69f03a4f4444846a3bb9e4c223f217b501d172937f3bd3a96448cc658",
+      "tasksHash": "2d4be166b382fe696eeaa77d6509321af65fd037e5438c42ace3f48ccec8b8ac",
+      "docsPages": ["features/audio-notifications.md"]
     }
   },
   "generatedPages": {
@@ -191,6 +275,10 @@
       "sourcePBIs": [16],
       "lastGenerated": "2026-02-09T23:30:00Z"
     },
+    "features/github-pr-integration.md": {
+      "sourcePBIs": [38],
+      "lastGenerated": "2026-02-19T12:00:00Z"
+    },
     "features/remote-sessions.md": {
       "sourcePBIs": [19, 27],
       "lastGenerated": "2026-02-10T00:00:00Z"
@@ -211,25 +299,33 @@
       "sourcePBIs": [33],
       "lastGenerated": "2026-02-09T23:30:00Z"
     },
+    "features/multi-agent-support.md": {
+      "sourcePBIs": [40, 41, 53],
+      "lastGenerated": "2026-02-19T12:00:00Z"
+    },
     "features/audio-notifications.md": {
-      "sourcePBIs": [42],
-      "lastGenerated": "2026-02-15T00:00:00Z"
+      "sourcePBIs": [42, 45, 56, 58],
+      "lastGenerated": "2026-02-19T12:00:00Z"
     },
     "features/background-monitor.md": {
       "sourcePBIs": [44],
       "lastGenerated": "2026-02-15T00:00:00Z"
     },
+    "features/pm-dashboard.md": {
+      "sourcePBIs": [46, 47, 48, 54, 55],
+      "lastGenerated": "2026-02-19T12:00:00Z"
+    },
     "architecture/index.md": {
-      "sourcePBIs": [1, 2, 3, 4],
-      "lastGenerated": "2026-02-09T23:30:00Z"
+      "sourcePBIs": [1, 2, 3, 4, 40, 46],
+      "lastGenerated": "2026-02-19T12:00:00Z"
     },
     "architecture/project-structure.md": {
-      "sourcePBIs": [1],
-      "lastGenerated": "2026-02-09T23:30:00Z"
+      "sourcePBIs": [1, 38, 40, 42, 46, 48, 54, 56],
+      "lastGenerated": "2026-02-19T12:00:00Z"
     },
     "architecture/data-flow.md": {
-      "sourcePBIs": [2, 3, 12, 26, 28, 44],
-      "lastGenerated": "2026-02-15T00:00:00Z"
+      "sourcePBIs": [2, 3, 12, 26, 28, 38, 40, 44, 45, 46, 48, 53, 54, 55],
+      "lastGenerated": "2026-02-19T12:00:00Z"
     },
     "architecture/hooks.md": {
       "sourcePBIs": [2, 33],
@@ -240,24 +336,24 @@
       "lastGenerated": "2026-02-09T23:30:00Z"
     },
     "reference/keybindings.md": {
-      "sourcePBIs": [4, 5, 7, 11, 13, 16, 28, 29, 31, 32, 37],
-      "lastGenerated": "2026-02-15T00:00:00Z"
+      "sourcePBIs": [4, 5, 7, 11, 13, 16, 28, 29, 31, 32, 37, 38, 47, 56, 58],
+      "lastGenerated": "2026-02-19T12:00:00Z"
     },
     "reference/configuration-files.md": {
-      "sourcePBIs": [2, 6, 19, 28, 42],
-      "lastGenerated": "2026-02-15T00:00:00Z"
+      "sourcePBIs": [2, 6, 19, 28, 40, 42, 48, 56],
+      "lastGenerated": "2026-02-19T12:00:00Z"
     },
     "reference/session-json.md": {
-      "sourcePBIs": [1, 2, 3, 12, 26, 33],
-      "lastGenerated": "2026-02-09T23:30:00Z"
+      "sourcePBIs": [1, 2, 3, 12, 26, 33, 40, 53, 54],
+      "lastGenerated": "2026-02-19T12:00:00Z"
     },
     "reference/status-icons.md": {
       "sourcePBIs": [4, 12, 26, 33],
       "lastGenerated": "2026-02-09T23:30:00Z"
     },
     "changelog.md": {
-      "sourcePBIs": [1, 2, 3, 4, 5, 6, 7, 11, 12, 13, 16, 19, 26, 27, 28, 29, 31, 32, 33, 37, 42, 44],
-      "lastGenerated": "2026-02-15T00:00:00Z"
+      "sourcePBIs": [1, 2, 3, 4, 5, 6, 7, 11, 12, 13, 16, 19, 26, 27, 28, 29, 31, 32, 33, 37, 38, 40, 41, 42, 44, 45, 46, 47, 48, 53, 54, 55, 56, 58],
+      "lastGenerated": "2026-02-19T12:00:00Z"
     }
   }
 }
